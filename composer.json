@@ -1,5 +1,5 @@
 {
-    "name": "moox/jobs",
+    "name": "vuthaihoc/moox-jobs",
     "description": "Manage Job Queues, Failed Jobs and Batches in Filament.",
     "keywords": [
         "laravel",

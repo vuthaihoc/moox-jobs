@@ -16,8 +16,8 @@ class JobStatsOverview extends BaseWidget
     {
         $aggregationColumns = [
             DB::raw('COUNT(*) as count'),
-            DB::raw('SUM(finished_at - started_at) as total_time_elapsed'),
-            DB::raw('AVG(finished_at - started_at) as average_time_elapsed'),
+            DB::raw('SUM(finished_at - started_at)::int as total_time_elapsed'),
+            DB::raw('AVG(finished_at - started_at)::int as average_time_elapsed'),
         ];
 
         $aggregatedInfo = JobManager::query()
