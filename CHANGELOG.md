@@ -2,9 +2,18 @@
 
 All notable changes to `Moox Jobs` will be documented in this file.
 
+## 3.3.0
+
+-   Moox Core 3.0.0 compatibility
+
+## 3.2.0
+
+-   Shared Hosting feature, see README
+-   Google Icons, see Core README
+
 ## 3.1
 
-- Google Icons, see README
+-   Google Icons, see README
 
 ## 3.0
 

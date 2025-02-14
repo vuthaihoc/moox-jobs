@@ -7,17 +7,19 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\DB;
 use Moox\Jobs\Models\JobManager;
 use Moox\Jobs\Traits\FormatSeconds;
+use Override;
 
 class JobStatsOverview extends BaseWidget
 {
     use FormatSeconds;
 
+    #[Override]
     protected function getCards(): array
     {
         $aggregationColumns = [
             DB::raw('COUNT(*) as count'),
-            DB::raw('SUM(finished_at - started_at)::int as total_time_elapsed'),
-            DB::raw('AVG(finished_at - started_at)::int as average_time_elapsed'),
+            DB::raw($this->dbSum('finished_at', 'started_at').' as total_time_elapsed'),
+            DB::raw($this->dbAvg('finished_at', 'started_at').' as average_time_elapsed'),
         ];
 
         $aggregatedInfo = JobManager::query()
@@ -43,5 +45,30 @@ class JobStatsOverview extends BaseWidget
             Stat::make(__('jobs::translations.execution_time'), $totalTime),
             Stat::make(__('jobs::translations.average_time'), $averageTime),
         ];
+    }
+
+    private function dbAvg(string $col1, string $col2): string
+    {
+        return 'AVG('.$this->dbColumnAsInteger($col1).' - '.$this->dbColumnAsInteger($col2).')'.($this->isPgSql() ? '::int' : '');
+    }
+
+    private function dbSum(string $col1, string $col2): string
+    {
+        return 'SUM('.$this->dbColumnAsInteger($col1).' - '.$this->dbColumnAsInteger($col2).')'.($this->isPgSql() ? '::int' : '');
+    }
+
+    private function isPgSql(): bool
+    {
+        return DB::connection()->getConfig()['driver'] === 'pgsql'
+            || DB::connection()->getConfig()['driver'] === 'crdb';
+    }
+
+    private function dbColumnAsInteger(string $colName): string
+    {
+        if (DB::connection()->getConfig()['driver'] === 'pgsql') {
+            return 'cast(extract(epoch from '.$colName.') as integer)';
+        }
+
+        return $colName;
     }
 }

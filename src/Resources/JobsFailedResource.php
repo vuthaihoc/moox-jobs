@@ -15,28 +15,30 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
+use Moox\Core\Traits\Tabs\TabsInResource;
 use Moox\Jobs\Models\FailedJob;
 use Moox\Jobs\Resources\JobsFailedResource\Pages\ListFailedJobs;
+use Override;
 
 class JobsFailedResource extends Resource
 {
+    use TabsInResource;
+
     protected static ?string $model = FailedJob::class;
 
     protected static ?string $navigationIcon = null;
 
+    #[Override]
     public static function getNavigationIcon(): string
     {
         if (self::$navigationIcon === null) {
-            if (config('core.use_google_icons', true)) {
-                self::$navigationIcon = 'gmdi-error';
-            } else {
-                self::$navigationIcon = 'heroicon-o-exclamation-triangle';
-            }
+            self::$navigationIcon = config('core.use_google_icons', true) ? 'gmdi-error' : 'heroicon-o-exclamation-triangle';
         }
 
         return self::$navigationIcon;
     }
 
+    #[Override]
     public static function form(Form $form): Form
     {
         return $form
@@ -53,6 +55,7 @@ class JobsFailedResource extends Resource
             ])->columns(4);
     }
 
+    #[Override]
     public static function table(Table $table): Table
     {
         return $table
@@ -66,7 +69,7 @@ class JobsFailedResource extends Resource
                     ->toggleable()
                     ->wrap()
                     ->limit(200)
-                    ->tooltip(fn (FailedJob $record) => "{$record->failed_at} UUID: {$record->uuid}; Connection: {$record->connection}; Queue: {$record->queue};")
+                    ->tooltip(fn (FailedJob $record): string => sprintf('%s UUID: %s; Connection: %s; Queue: %s;', $record->failed_at, $record->uuid, $record->connection, $record->queue))
                     ->label(__('jobs::translations.exception')),
                 TextColumn::make('uuid')->sortable()->searchable()->toggleable(isToggledHiddenByDefault: true)->label(__('jobs::translations.uuid')),
                 TextColumn::make('connection')->sortable()->searchable()->toggleable(isToggledHiddenByDefault: true)->label(__('jobs::translations.connection')),
@@ -79,8 +82,9 @@ class JobsFailedResource extends Resource
                     ->requiresConfirmation()
                     ->action(function (Collection $records): void {
                         foreach ($records as $record) {
-                            Artisan::call("queue:retry {$record->uuid}");
+                            Artisan::call('queue:retry '.$record->uuid);
                         }
+
                         Notification::make()
                             ->title($records->count().__('jobs::translations.pushed_back_notification'))
                             ->success()
@@ -94,15 +98,16 @@ class JobsFailedResource extends Resource
                     ->label(__('jobs::translations.retry'))
                     ->requiresConfirmation()
                     ->action(function (FailedJob $record): void {
-                        Artisan::call("queue:retry {$record->uuid}");
+                        Artisan::call('queue:retry '.$record->uuid);
                         Notification::make()
-                            ->title(__('jobs::translations.jobs.single')." {$record->uuid} ".__('jobs::translations.job_pushed_back_notification'))
+                            ->title(__('jobs::translations.jobs.single').sprintf(' %s ', $record->uuid).__('jobs::translations.job_pushed_back_notification'))
                             ->success()
                             ->send();
                     }),
             ]);
     }
 
+    #[Override]
     public static function getRelations(): array
     {
         return [
@@ -110,6 +115,7 @@ class JobsFailedResource extends Resource
         ];
     }
 
+    #[Override]
     public static function getPages(): array
     {
         return [
@@ -117,6 +123,7 @@ class JobsFailedResource extends Resource
         ];
     }
 
+    #[Override]
     public static function getWidgets(): array
     {
         return [
@@ -124,26 +131,31 @@ class JobsFailedResource extends Resource
         ];
     }
 
+    #[Override]
     public static function getModelLabel(): string
     {
         return __('jobs::translations.jobs_failed.single');
     }
 
+    #[Override]
     public static function getPluralModelLabel(): string
     {
         return __('jobs::translations.jobs_failed.plural');
     }
 
+    #[Override]
     public static function getNavigationLabel(): string
     {
         return __('jobs::translations.jobs_failed.navigation_label');
     }
 
+    #[Override]
     public static function getBreadcrumb(): string
     {
         return __('jobs::translations.breadcrumb');
     }
 
+    #[Override]
     public static function shouldRegisterNavigation(): bool
     {
         return true;
@@ -154,11 +166,13 @@ class JobsFailedResource extends Resource
         return number_format(static::getModel()::count());
     }
 
+    #[Override]
     public static function getNavigationGroup(): ?string
     {
         return __('jobs::translations.navigation_group');
     }
 
+    #[Override]
     public static function getNavigationSort(): ?int
     {
         return config('jobs.navigation_sort') + 2;

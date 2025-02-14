@@ -2,12 +2,12 @@
 
 namespace Moox\Jobs\Http\SharedHosting;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Artisan;
 
 class QueueWorker extends Controller
 {
-    public function __invoke()
+    public function __invoke(): string
     {
         $sharedHostingToken = config('core.shared_hosting.token');
 
@@ -37,6 +37,5 @@ class QueueWorker extends Controller
 
             return 'Queue worker ran with output: '.$output;
         }
-
     }
 }
