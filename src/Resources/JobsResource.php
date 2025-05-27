@@ -11,16 +11,16 @@ use Filament\Resources\Resource;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Moox\Core\Traits\Tabs\TabsInResource;
+use Moox\Core\Forms\Components\ProgressColumn;
+use Moox\Core\Traits\Tabs\HasResourceTabs;
 use Moox\Jobs\Models\JobManager;
 use Moox\Jobs\Resources\JobsResource\Pages\ListJobs;
 use Moox\Jobs\Resources\JobsResource\Widgets\JobStatsOverview;
 use Override;
-use RyanChandler\FilamentProgressColumn\ProgressColumn;
 
 class JobsResource extends Resource
 {
-    use TabsInResource;
+    use HasResourceTabs;
 
     protected static ?string $model = JobManager::class;
 
@@ -163,11 +163,5 @@ class JobsResource extends Resource
     public static function getNavigationGroup(): ?string
     {
         return __('jobs::translations.navigation_group');
-    }
-
-    #[Override]
-    public static function getNavigationSort(): ?int
-    {
-        return config('jobs.navigation_sort');
     }
 }
