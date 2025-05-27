@@ -69,11 +69,12 @@ class JobsWaitingResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('status')
                     ->badge()
                     ->label(__('jobs::translations.status'))
-                    ->formatStateUsing(fn (string $state): string => __('jobs::translations.'.$state))
-                    ->color(fn (string $state): string => match ($state) {
+                    ->formatStateUsing(fn(string $state): string => __('jobs::translations.' . $state))
+                    ->color(fn(string $state): string => match ($state) {
                         'running' => 'primary',
                         'waiting' => 'success',
                         'failed' => 'danger',
@@ -81,7 +82,12 @@ class JobsWaitingResource extends Resource
                     }),
                 TextColumn::make('display_name')
                     ->label(__('jobs::translations.name'))
+                    ->description(fn($record) => $record->payload_decoded['uuid'] ?? 'NA')
                     ->sortable(),
+                TextColumn::make('payload')
+                    ->formatStateUsing(fn($state, $record) => \Arr::get($record->payload_decoded, 'data.command', 'NA'))
+                    ->wrap()
+                    ->label('Command'),
                 TextColumn::make('queue')
                     ->label(__('jobs::translations.queue'))
                     ->sortable(),

@@ -32,4 +32,10 @@ class Job extends Model
 
         return $payload['displayName'] ?? null;
     }
+
+    public function getPayloadDecodedAttribute()
+    {
+        return json_decode($this->payload, true);
+    }
+
 }
