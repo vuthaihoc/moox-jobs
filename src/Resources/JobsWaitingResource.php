@@ -12,7 +12,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Moox\Core\Traits\Tabs\TabsInResource;
+use Moox\Core\Traits\Tabs\HasResourceTabs;
 use Moox\Jobs\Models\Job;
 use Moox\Jobs\Resources\JobsWaitingResource\Pages\ListJobsWaiting;
 use Moox\Jobs\Resources\JobsWaitingResource\Widgets\JobsWaitingOverview;
@@ -20,7 +20,7 @@ use Override;
 
 class JobsWaitingResource extends Resource
 {
-    use TabsInResource;
+    use HasResourceTabs;
 
     protected static ?string $model = Job::class;
 
