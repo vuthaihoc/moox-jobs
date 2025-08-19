@@ -15,4 +15,10 @@ use Illuminate\Database\Eloquent\Model;
 class FailedJob extends Model
 {
     public $timestamps = false;
+
+    public function getConnectionName()
+    {
+        return config('jobs.job_connection') ?: $this->connection;
+    }
+
 }

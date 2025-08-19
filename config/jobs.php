@@ -29,4 +29,7 @@ return [
         'retention_days' => 7,
     ],
 
+    'job_connection' => env('JM_JOB_CONNECTION'),
+    'manager_connection' => env('JM_MANAGER_CONNECTION'),
+
 ];

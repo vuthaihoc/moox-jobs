@@ -13,6 +13,11 @@ class Job extends Model
         'reserved_at',
     ];
 
+    public function getConnectionName()
+    {
+        return config('jobs.job_connection') ?: $this->connection;
+    }
+
     public function status(): Attribute
     {
         return Attribute::make(

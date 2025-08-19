@@ -45,6 +45,11 @@ class JobManager extends Model
         'finished_at' => 'datetime',
     ];
 
+    public function getConnectionName()
+    {
+        return config('jobs.manager_connection') ?: $this->connection;
+    }
+
     public static function getJobId(JobContract $job): string|int
     {
         if ($jobId = $job->getJobId()) {
