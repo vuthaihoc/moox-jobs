@@ -6,14 +6,14 @@ use Filament\Resources\Resource;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Moox\Core\Traits\Tabs\HasResourceTabs;
+use Moox\Core\Traits\Tabs\TabsInResource;
 use Moox\Jobs\Models\JobBatch;
 use Moox\Jobs\Resources\JobBatchesResource\Pages\ListJobBatches;
 use Override;
 
 class JobBatchesResource extends Resource
 {
-    use HasResourceTabs;
+    use TabsInResource;
 
     protected static ?string $model = JobBatch::class;
 
@@ -155,5 +155,11 @@ class JobBatchesResource extends Resource
     public static function getNavigationGroup(): ?string
     {
         return __('jobs::translations.navigation_group');
+    }
+
+    #[Override]
+    public static function getNavigationSort(): ?int
+    {
+        return config('jobs.navigation_sort') + 4;
     }
 }

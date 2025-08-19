@@ -15,14 +15,14 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
-use Moox\Core\Traits\Tabs\HasResourceTabs;
+use Moox\Core\Traits\Tabs\TabsInResource;
 use Moox\Jobs\Models\FailedJob;
 use Moox\Jobs\Resources\JobsFailedResource\Pages\ListFailedJobs;
 use Override;
 
 class JobsFailedResource extends Resource
 {
-    use HasResourceTabs;
+    use TabsInResource;
 
     protected static ?string $model = FailedJob::class;
 
@@ -170,5 +170,11 @@ class JobsFailedResource extends Resource
     public static function getNavigationGroup(): ?string
     {
         return __('jobs::translations.navigation_group');
+    }
+
+    #[Override]
+    public static function getNavigationSort(): ?int
+    {
+        return config('jobs.navigation_sort') + 2;
     }
 }
