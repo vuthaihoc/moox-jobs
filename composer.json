@@ -21,7 +21,7 @@
         }
     ],
     "require": {
-        "moox/core": "^3.0.3"
+        "vuthaihoc/moox-core": "^4.0.0"
     },
     "require-dev": {},
     "autoload": {
