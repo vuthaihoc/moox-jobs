@@ -4,6 +4,7 @@ namespace Moox\Jobs\Resources;
 
 use Filament\Schemas\Schema;
 use Filament\Actions\BulkAction;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Actions\Action;
@@ -11,7 +12,6 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
