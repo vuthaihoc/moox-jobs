@@ -11,6 +11,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
@@ -90,6 +91,7 @@ class JobsFailedResource extends Resource
                             ->success()
                             ->send();
                     }),
+                DeleteBulkAction::make('Delete selected'),
             ])
             ->recordActions([
                 DeleteAction::make('Delete')->label(__('jobs::translations.delete')),
