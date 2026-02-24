@@ -1,20 +1,49 @@
-![Moox Jobs](https://github.com/mooxphp/moox/raw/main/art/banner/jobs.jpg)
+<div class="filament-hidden">
+
+![Moox Jobs](banner.jpg)
+
+</div>
 
 # Moox Jobs
 
 Managing Job Queues, Failed Jobs and Batches in Filament.
 
+**In the Moox app:** Use `php artisan moox:install` to install all Moox packages and run their migrations in one step—no need to run package-specific install commands.
+
 Alternative to Laravel Horizon, if you use the database driver for queues. Nice addon to Laravel Horizon, if you use Redis. See [Limitations](#limitations) below for more information about Redis, Amazon SQS and Beanstalkd compatibility. More information about Laravel Job Queues and how Moox Jobs works in our [Jobs for Beginners Guide](#jobs-for-beginners).
+
+## Quick installation
+
+### Using the Moox app (recommended)
+
+If you use the Moox application, a single command installs **all** Moox packages and runs their migrations:
+
+```bash
+php artisan moox:install
+```
+
+This will handle the Jobs package along with every other Moox package—including publishing configs, running migrations, and registering plugins. You do **not** need to run `mooxjobs:install` or any other package-specific install command when using `moox:install`.
+
+### Installing the Jobs package only
+
+If you are not using the full Moox app and only want this package:
+
+```bash
+composer require moox/jobs
+php artisan mooxjobs:install
+```
+
+Curious what the install commands do? See [manual installation](#manual-installation) below.
 
 ## Requirements
 
-Moox Jobs requires
+| Plugin Version | Laravel Version | Filament Version | PHP Version |
+| -------------- | --------------- | ---------------- | ----------- |
+| 2.x            | 9.x             | 2.x              | \> 8.0      |
+| 3.x            | 10.x            | 3.x              | \> 8.1      |
+| 5.x            | 11.x            | 5.x              | \> 8.3      |
 
--   [PHP 8.1](https://www.php.net/) or higher
--   [Laravel 10](https://laravel.com/docs/installation) or higher
--   [Filament 3](https://filamentphp.com/docs/panels/installation) or higher
-
-in short
+in short steps
 
 ```bash
 composer create-project laravel/laravel moox-jobs-demo
@@ -34,44 +63,33 @@ php artisan mooxjobs:update
 
 The update command takes care about changing and creating the new fields without loosing data. Alternatively you may delete the job-manager table and simply run the following install command.
 
-## Quick installation
-
-These two commmands are all you need to install the package:
-
-```bash
-composer require moox/jobs
-php artisan mooxjobs:install
-```
-
-Curious what the install command does? See [manual installation](#manual-installation) below.
-
 ## Features
 
 ### Jobs
 
 Monitor your running and finished jobs.
 
-![screenshot-jobs](https://github.com/mooxphp/moox/raw/main/art/screenshot/jobs-jobs.jpg)
+![screenshot-jobs](screenshot/jobs-jobs.jpg)
 
 ### Jobs waiting
 
 See all waiting Jobs queued, delete one, many or even all waiting jobs at once before they hit the queue. And, yes we do not only have dark mode.
 
-![screenshot-waiting](https://github.com/mooxphp/moox/raw/main/art/screenshot/jobs-waiting.jpg)
+![screenshot-waiting](screenshot/jobs-waiting.jpg)
 
 ### Jobs failed
 
 See all failed Jobs including details, retry or delete single jobs, many jobs or even all failed jobs at once.
 
-![screenshot-details](https://github.com/mooxphp/moox/raw/main/art/screenshot/jobs-details.jpg)
+![screenshot-details](screenshot/jobs-details.jpg)
 
-![screenshot-detail](https://github.com/mooxphp/moox/raw/main/art/screenshot/jobs-detail.jpg)
+![screenshot-detail](screenshot/jobs-detail.jpg)
 
 ### Job batches
 
 Monitor your job batches, prune batches.
 
-![screenshot-batches](https://github.com/mooxphp/moox/raw/main/art/screenshot/jobs-batches.jpg)
+![screenshot-batches](screenshot/jobs-batches.jpg)
 
 ## Configuration
 
@@ -79,11 +97,15 @@ The configuration of the package is work in progress. To make it better suitable
 
 New in 3.1 is the switch to Google Icons and the ability to [switch back to Heroicons in Moox Core](https://github.com/mooxphp/core#disable-google-icons).
 
-If there is something you need to be configurable, drop us an issue.
+If there is anything else you want to configure, drop us an issue.
 
 ## Manual Installation
 
-This Laravel package is made for FilamentPHP and the awesome TALL-Stack. If you don't want to use our install command, follow thes manual steps to install the package.
+This Laravel package is made for FilamentPHP and the awesome TALL-Stack.
+
+**Note:** If you use the Moox app, run `php artisan moox:install` instead—it installs all packages and runs all migrations (including Jobs) in one go. The steps below are only for installing this package by itself without the unified installer.
+
+If you don't want to use our install command, follow these manual steps to install the package.
 
 Install the package via Composer:
 
@@ -125,7 +147,6 @@ return [
             'plural_label' => 'Jobs',
             'navigation_group' => 'Job manager',
             'navigation_icon' => 'heroicon-o-play',
-            'navigation_sort' => 1,
             'navigation_count_badge' => true,
             'resource' => Moox\Jobs\Resources\JobsResource::class,
         ],
@@ -135,7 +156,6 @@ return [
             'plural_label' => 'Jobs waiting',
             'navigation_group' => 'Job manager',
             'navigation_icon' => 'heroicon-o-pause',
-            'navigation_sort' => 2,
             'navigation_count_badge' => true,
             'resource' => Moox\Jobs\Resources\JobsWaitingResource::class,
         ],
@@ -145,7 +165,6 @@ return [
             'plural_label' => 'Failed Jobs',
             'navigation_group' => 'Job manager',
             'navigation_icon' => 'heroicon-o-exclamation-triangle',
-            'navigation_sort' => 3,
             'navigation_count_badge' => true,
             'resource' => Moox\Jobs\Resources\JobsFailedResource::class,
         ],
@@ -155,7 +174,6 @@ return [
             'plural_label' => 'Job Batches',
             'navigation_group' => 'Job manager',
             'navigation_icon' => 'heroicon-o-inbox-stack',
-            'navigation_sort' => 4,
             'navigation_count_badge' => true,
             'resource' => Moox\Jobs\Resources\JobBatchesResource::class,
         ],
@@ -410,7 +428,7 @@ If you want to use the progress feature, be reminded that:
 
 The database model for Moox Jobs is designed with [Vemto](https://vemto.app):
 
-![jobs-model](https://github.com/mooxphp/moox/raw/main/art/vemto/moox-jobs.jpg)
+![jobs-model](screenshot/vemto-jobs.jpg)
 
 ## Authorization
 
@@ -461,7 +479,7 @@ While Laravels queue system and Laravel Horizon are made for spawning (specially
 
 Besides this, Moox Jobs is tested managing thousands of jobs per hour or millions of jobs per month.
 
-![screenshot-batches](https://github.com/mooxphp/moox/raw/main/art/screenshot/jobs-scale.jpg)
+![screenshot-batches](screenshot/jobs-scale.jpg)
 
 ## Limitations
 

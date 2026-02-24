@@ -21,9 +21,11 @@
         }
     ],
     "require": {
-        "moox/core": "^3.0.3"
+        "moox/core": "5.0.12"
     },
-    "require-dev": {},
+    "require-dev": {
+        "moox/devtools": "5.0.12"
+    },
     "autoload": {
         "psr-4": {
             "Moox\\Jobs\\": "src"
@@ -33,6 +35,51 @@
         "sort-packages": true
     },
     "extra": {
+        "moox": {
+            "stability": "stable",
+            "require": {
+                "spatie/laravel-medialibrary": {
+                    "auto_publish": "spatie-jobs-config"
+                }
+            },
+            "install": {
+                "auto_migrate": [
+                    "database/migrations"
+                ],
+                "plugins": [
+                    "Moox\\Jobs\\Moox\\Plugins\\JobsPlugin",
+                    "Moox\\Jobs\\Moox\\Plugins\\JobsWaitingPlugin",
+                    "Moox\\Jobs\\Moox\\Plugins\\JobsFailedPlugin",
+                    "Moox\\Jobs\\Moox\\Plugins\\JobsBatchesPlugin"
+                ],
+                "seed": "database/seeders/JobsSeeder.php",
+                "auto_publish": "jobs-config",
+                "auto_entities": {
+                    "Some Resource": true,
+                    "Another Resource": null
+                },
+                "auto_class": {
+                    "Some Class": "Moox\\Jobs\\SomeClass",
+                    "Another Class": "Moox\\Jobs\\AnotherClass"
+                },
+                "auto_run": {
+                    "Run this": "",
+                    "Build the frontend": "",
+                    "Clear the cache": ""
+                },
+                "auto_runhere": {
+                    "Build the frontend": ""
+                }
+            },
+            "update": {
+                "migrate": "database/migrations",
+                "merge": "moox-jobs-config"
+            },
+            "uninstall": {
+                "migrate": "database/migrations",
+                "remove": "moox-jobs-config"
+            }
+        },
         "laravel": {
             "providers": [
                 "Moox\\Jobs\\JobsServiceProvider",
@@ -43,6 +90,5 @@
             }
         }
     },
-    "minimum-stability": "stable",
     "prefer-stable": true
 }

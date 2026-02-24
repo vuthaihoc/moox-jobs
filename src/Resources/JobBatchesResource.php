@@ -2,22 +2,22 @@
 
 namespace Moox\Jobs\Resources;
 
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Moox\Core\Traits\Tabs\TabsInResource;
+use Moox\Core\Traits\Tabs\HasResourceTabs;
 use Moox\Jobs\Models\JobBatch;
 use Moox\Jobs\Resources\JobBatchesResource\Pages\ListJobBatches;
 use Override;
 
 class JobBatchesResource extends Resource
 {
-    use TabsInResource;
+    use HasResourceTabs;
 
     protected static ?string $model = JobBatch::class;
 
-    protected static ?string $navigationIcon = null;
+    protected static string|\BackedEnum|null $navigationIcon = null;
 
     #[Override]
     public static function getNavigationIcon(): string
@@ -88,7 +88,7 @@ class JobBatchesResource extends Resource
                     ->toggleable()
                     ->label(__('jobs::translations.failed_job_id')),
             ])
-            ->actions([
+            ->recordActions([
                 DeleteAction::make('Delete'),
             ])
             ->defaultSort('created_at', 'desc');
@@ -148,18 +148,12 @@ class JobBatchesResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return number_format(static::getModel()::count());
+        return number_format(static::getModel()::query()->count());
     }
 
     #[Override]
     public static function getNavigationGroup(): ?string
     {
         return __('jobs::translations.navigation_group');
-    }
-
-    #[Override]
-    public static function getNavigationSort(): ?int
-    {
-        return config('jobs.navigation_sort') + 4;
     }
 }

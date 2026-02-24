@@ -2,31 +2,31 @@
 
 namespace Moox\Jobs\Resources;
 
+use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\BulkAction;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\ViewAction;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
-use Moox\Core\Traits\Tabs\TabsInResource;
+use Moox\Core\Traits\Tabs\HasResourceTabs;
 use Moox\Jobs\Models\FailedJob;
 use Moox\Jobs\Resources\JobsFailedResource\Pages\ListFailedJobs;
 use Override;
 
 class JobsFailedResource extends Resource
 {
-    use TabsInResource;
+    use HasResourceTabs;
 
     protected static ?string $model = FailedJob::class;
 
-    protected static ?string $navigationIcon = null;
+    protected static string|\BackedEnum|null $navigationIcon = null;
 
     #[Override]
     public static function getNavigationIcon(): string
@@ -39,10 +39,10 @@ class JobsFailedResource extends Resource
     }
 
     #[Override]
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('uuid')->disabled()->columnSpan(4)->label(__('jobs::translations.uuid')),
                 TextInput::make('failed_at')->disabled()->label(__('jobs::translations.failed_at')),
                 TextInput::make('id')->disabled()->label(__('jobs::translations.id')),
@@ -76,7 +76,7 @@ class JobsFailedResource extends Resource
                 TextColumn::make('queue')->sortable()->searchable()->toggleable(isToggledHiddenByDefault: true)->label(__('jobs::translations.queue')),
             ])
             ->filters([])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkAction::make('retry')
                     ->label(__('jobs::translations.retry'))
                     ->requiresConfirmation()
@@ -91,7 +91,7 @@ class JobsFailedResource extends Resource
                             ->send();
                     }),
             ])
-            ->actions([
+            ->recordActions([
                 DeleteAction::make('Delete')->label(__('jobs::translations.delete')),
                 ViewAction::make('View'),
                 Action::make('retry')
@@ -163,18 +163,12 @@ class JobsFailedResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return number_format(static::getModel()::count());
+        return number_format(static::getModel()::query()->count());
     }
 
     #[Override]
     public static function getNavigationGroup(): ?string
     {
         return __('jobs::translations.navigation_group');
-    }
-
-    #[Override]
-    public static function getNavigationSort(): ?int
-    {
-        return config('jobs.navigation_sort') + 2;
     }
 }
